@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+    - name: install docker 
+      yum: 
+        name: docker 
+        state: present 
+    - name: docker start and enable 
+      service: 
+        name: docker 
+        state: started 
+        enabled: true
+      become: true
+    - name: add ec2-user to docker group
+      command: sudo usermod -a -G docker ec2-user 
+      notify: 
+        - restart docker 
+  handlers: 
+    - name: restart docker 
+      service: 
+        name: docker 
+        state: restarted  
+  
+      
+
+  
+      
