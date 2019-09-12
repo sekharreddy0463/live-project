@@ -1,0 +1,30 @@
+--- 
+- hosts: all 
+  become: true
+  tasks: 
+    - name: install apache 
+      yum: 
+        name: httpd 
+        state: present
+    - name: install git 
+      yum: 
+        name: git 
+        state: present   
+    - name: start and enable 
+      service: 
+        name: httpd 
+        state: started 
+        enabled: true
+    - name: deploy static website from Git 
+      git:
+        repo: https://github.com/javahometech/javahome-app
+        dest: /var/www/html
+      notify: 
+        - restart apache 
+  handlers: 
+    - name: restart apache 
+      service: 
+        name: httpd 
+        state: restarted 
+
+
